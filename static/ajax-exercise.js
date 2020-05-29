@@ -4,38 +4,50 @@
 
 $('#get-fortune-button').on('click', () => {
   $.get('/fortune', (response) => {
-    $('#fortune-text').html(response);
+    $('#fortune-text').text(response);
   });
 });
+
+//are .text and .html the same?
 
 
 // Part 2
 
 $('#weather-form').on('submit', (evt) => {
   evt.preventDefault();
-
   const formData = {
-    // TODO: select the zipcode input
-    zipcode: $('REPLACE THIS').val()
+    zipcode: $('#zipcode-field').val()
   };
-
-  // TODO: choose a request method (GET or POST) by uncommenting one of
-  // these blocks of code
-
-  // $.get('/replaceMe', formData, (response) => {
-  //   // Fill in the callback function
-  // });
-
-  // $.post('/replaceMe', formData, (response) => {
-  //   // Fill in the callback function
-  // });
+ 
+  $.get('/weather', formData, (response) => {
+    $('#weather-info').html(response.forecast);
+  });
 });
 
 
 // Part 3
 
+
 $("#order-form").on('submit', (evt) => {
   evt.preventDefault();
+
+  const formData = {
+    melon_type: $('#melon-type-field').val(),
+    qty: $('#qty-field').val()
+  };
+
+  $.post('/order-melons', formData, (response) => {
+    const orderStatus = $('#order-status');
+
+    if (results.code === 'ERROR') {
+      orderStatus.css('color', 'red');
+    } else {
+      orderStatus.css('color', '');  // Reset to original color
+    } 
+
+    orderStatus.html(`<p>${response.msg}</p>`);
+  });
+});
 
   // TODO: create an object to store key-value pairs that'll be sent to
   // the server
@@ -45,4 +57,4 @@ $("#order-form").on('submit', (evt) => {
   // In the callback function, use the response from the server to
   // update #order-status. IMPORTANT: if the result code is 'ERROR',
   // make it show up in red.
-});
+
